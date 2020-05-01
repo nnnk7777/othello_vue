@@ -13,25 +13,24 @@
     </div>
 
     <div
-      class="board flex justify-center items-center w-board m-auto sm:mt-0 lg:m-10 "
+      class="board flex justify-center items-center w-board m-auto mt-0 lg:m-10 "
     >
       <div v-for="(n, x) in 8">
         <div
-          :class="{highlight: can_put_here(x, y)}"
+          v-for="(n, y) in 8"
+          :class="{ highlight: can_put_here(x, y) }"
           class="bg-green-500 border border-black"
-          v-for="(n, y) in 8">
-          <div
-            class="box"
-            @click="set_stone(x, y)"
-          >
-            <div :class="{ white: board[x][y] == -1, black: board[x][y] == 1 }"></div>
+        >
+          <div class="box" @click="set_stone(x, y)">
+            <div
+              :class="{ white: board[x][y] == -1, black: board[x][y] == 1 }"
+            ></div>
           </div>
         </div>
       </div>
     </div>
   </div>
 </template>
-
 
 <script>
 import utils from "@/mixins/utils.js";
@@ -45,28 +44,20 @@ export default {
       BLACK: 1,
       WHITE: -1,
       board: new Array(8),
-      directions: [[-1, 0], [-1,-1], [ 0,-1], [ 1,-1],
-                   [ 1, 0], [ 1, 1], [ 0, 1], [-1, 1]],
+      directions: [
+        [-1, 0],
+        [-1, -1],
+        [0, -1],
+        [1, -1],
+        [1, 0],
+        [1, 1],
+        [0, 1],
+        [-1, 1]
+      ],
       skip_count: 0,
       turn_wb: 1
     };
   },
-  methods: {
-    set_stone(x, y) {
-      if (this.can_put_here(x, y)) {
-        this.board[x][y] = this.turn_wb
-        this.board.push()
-
-        this.directions.forEach((d) => {
-            if (this.check_direction(x, y, d[0], d[1])) {
-              this.reverse_around(x, y, d[0], d[1])
-            }
-        });
-        this.turn_wb = -1*this.turn_wb
-      }
-    }
-  },
-
   created() {
     for (let y = 0; y < 8; y++) {
       this.board[y] = new Array(8).fill(0);
@@ -77,15 +68,13 @@ export default {
 };
 </script>
 
-
-
 <style lang="postcss">
 .box {
   height: 40px;
   width: 40px;
   padding: 2px;
 }
-.white{
+.white {
   height: 35px;
   width: 35px;
   border-radius: 35px;
@@ -97,7 +86,7 @@ export default {
   border-radius: 40px;
   background-color: #000;
 }
-.highlight{
+.highlight {
   opacity: 0.5;
   background-color: #f00;
 }
